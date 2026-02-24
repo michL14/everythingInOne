@@ -1,0 +1,67 @@
+CREATE TABLE categoryEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL -- 'Subscription', 'Expense', 'Refund'
+);
+
+CREATE TABLE paymentEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    amount REAL NOT NULL,
+    categoryId INTEGER NOT NULL,
+    isPaid INTEGER DEFAULT 0, -- Plus de "AS Boolean" ici
+    FOREIGN KEY (categoryId) REFERENCES categoryEntity(id) ON DELETE CASCADE
+);
+
+-- Seed initial categories
+INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (1, 'Subscription');
+INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (2, 'Expense');
+INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (3, 'Refund');
+
+selectAllPayments:
+SELECT
+    p.id,
+    p.amount,
+    p.isPaid,
+    c.name AS categoryName
+FROM paymentEntity AS p
+JOIN categoryEntity AS c ON p.categoryId = c.id;
+
+insertPayment:
+INSERT INTO paymentEntity(amount, categoryId, isPaid)
+VALUES (?, ?, ?);
+
+deletePayment:
+DELETE FROM paymentEntity WHERE id = ?;
+
+--- Requêtes pour CategoryEntity ---
+
+-- Récupérer toutes les catégories
+selectAllCategories:
+SELECT * FROM categoryEntity;
+
+-- Récupérer une catégorie par son nom (utile pour les recherches)
+selectCategoryByName:
+SELECT * FROM categoryEntity WHERE name = ?;
+
+-- Ajouter une nouvelle catégorie
+insertCategory:
+INSERT INTO categoryEntity(name)
+VALUES (?);
+
+-- Supprimer une catégorie
+-- Note : Grâce au ON DELETE CASCADE, supprimer une catégorie
+-- supprimera automatiquement tous les paiements associés.
+deleteCategory:
+DELETE FROM categoryEntity WHERE id = ?;
+
+--- Requêtes pour PaymentEntity (Amélioration) ---
+
+-- Récupérer les paiements filtrés par catégorie (Optionnel mais très utile)
+selectPaymentsByCategory:
+SELECT
+    p.id,
+    p.amount,
+    p.isPaid,
+    c.name AS categoryName
+FROM paymentEntity AS p
+JOIN categoryEntity AS c ON p.categoryId = c.id
+WHERE c.id = ?;

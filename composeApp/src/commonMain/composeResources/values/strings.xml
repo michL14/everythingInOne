@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Everything in One</string>
+    <string name="profile_name">Mich</string>
+    <string name="home_salutation">Hello</string>
+
+    <string name="upcoming_payment_title">Upcoming payment</string>
+    <string name="recent_transaction_title">Recent transactions</string>
+    <string name="current_balance_label">Current balance</string>
+    <string name="see_all_label">See all</string>
+
+    <!-- Add transaction -->
+    <string name="add_a_transaction">Add a transaction</string>
+    <string name="add_an_amount_text_field">Amount</string>
+    <string name="mandatory_amount_error">Le montant est obligatoire</string>
+    <string name="invalid_amount_error">Montant invalide</string>
+    <string name="not_null_amount_error">Le montant doit être supérieur à 0</string>
+    <string name="bottom_sheet_success_message">Transaction ajoutée avec succès !</string>
+    <string name="bottom_sheet_success_button">Retour à l'accueil</string>
+    <string name="bottom_sheet_summary_transaction_title">Résumé de la transaction</string>
+    <string name="bottom_sheet_summary_transaction_amount">Montant: </string>
+    <string name="bottom_sheet_summary_transaction_category">Catégorie: </string>
+    <string name="bottom_sheet_summary_transaction_modify_button">Modifier</string>
+    <string name="bottom_sheet_summary_transaction_validate_button">Valider</string>
+
+</resources>

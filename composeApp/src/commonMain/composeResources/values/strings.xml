@@ -3,23 +3,30 @@
     <string name="profile_name">Mich</string>
     <string name="home_salutation">Hello</string>
 
-    <string name="upcoming_payment_title">Upcoming payment</string>
-    <string name="recent_transaction_title">Recent transactions</string>
-    <string name="current_balance_label">Current balance</string>
-    <string name="see_all_label">See all</string>
+    <!-- Home Screen -->
+    <string name="upcoming_payment_title">Upcoming Payment</string>
+    <string name="recent_transaction_title">Recent Transactions</string>
+    <string name="current_balance_label">Current Balance</string>
+    <string name="see_all_label">See All</string>
+
+    <!-- Payment Screen -->
+    <string name="payment_title">Payment</string>
+    <string name="default_description_payment">Other</string>
+
 
     <!-- Add transaction -->
-    <string name="add_a_transaction">Add a transaction</string>
+    <string name="add_a_transaction">Add a Transaction</string>
     <string name="add_an_amount_text_field">Amount</string>
-    <string name="mandatory_amount_error">Le montant est obligatoire</string>
-    <string name="invalid_amount_error">Montant invalide</string>
-    <string name="not_null_amount_error">Le montant doit être supérieur à 0</string>
-    <string name="bottom_sheet_success_message">Transaction ajoutée avec succès !</string>
-    <string name="bottom_sheet_success_button">Retour à l'accueil</string>
-    <string name="bottom_sheet_summary_transaction_title">Résumé de la transaction</string>
-    <string name="bottom_sheet_summary_transaction_amount">Montant: </string>
-    <string name="bottom_sheet_summary_transaction_category">Catégorie: </string>
-    <string name="bottom_sheet_summary_transaction_modify_button">Modifier</string>
-    <string name="bottom_sheet_summary_transaction_validate_button">Valider</string>
-
+    <string name="add_a_description_text_field">Description</string>
+    <string name="mandatory_amount_error">Amount is required</string>
+    <string name="invalid_amount_error">Invalid amount</string>
+    <string name="not_null_amount_error">Amount must be greater than 0</string>
+    <string name="bottom_sheet_success_message">Transaction added successfully!</string>
+    <string name="bottom_sheet_success_button">Back to Home</string>
+    <string name="bottom_sheet_summary_transaction_title">Transaction Summary</string>
+    <string name="bottom_sheet_summary_transaction_amount">Amount: </string>
+    <string name="bottom_sheet_summary_transaction_category">Category: </string>
+    <string name="bottom_sheet_summary_transaction_description">Description: </string>
+    <string name="bottom_sheet_summary_transaction_modify_button">Edit</string>
+    <string name="bottom_sheet_summary_transaction_validate_button">Confirm</string>
 </resources>

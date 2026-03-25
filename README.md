@@ -11,4 +11,13 @@ This is a Kotlin Multiplatform project targeting Android, iOS, Desktop.
   you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
 
+## 🧹 Reset de la base de données
+
+Pour supprimer toutes les données et recréer la base :
+
+```bash
+./scripts/reset_db.sh
+```
+
+
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…

@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.sp
 data class AppColors(
     val primary: Color,
     val onPrimary: Color,
+    val onPrimaryLight: Color,
     val secondary: Color,
     val onSecondary: Color,
     val background: Color,
@@ -27,15 +28,21 @@ data class AppColors(
     val subtitle: Color,
     val error: Color = Color(0xFFB00020),
     val onError: Color = Color.White,
+    val refund: Color = Color(0xFFB1DA9E),
+    val onRefund: Color = Color(0xFF2f6218),
+    val expense: Color = Color(0xFFF4CCCC),
+    val onExpense: Color = Color(0xFF8D001A),
     val description: Color = Color.Gray,
     val disabledContainer: Color,
     val disabledContent: Color,
     val container: Color,
+    val containerCard: Color,
 )
 
 private val LightAppColors = AppColors(
     primary = Color(0xFFF88585),
     onPrimary = Color.DarkGray,
+    onPrimaryLight = Color.White,
     secondary = Color(0xF6B3B3),
     onSecondary = Color.Gray,
     background = Color.White,
@@ -47,11 +54,13 @@ private val LightAppColors = AppColors(
     container = Color.LightGray,
     disabledContainer = Color.LightGray,
     disabledContent = Color.Black,
+    containerCard = Color(0xFFF3F6F4)
 )
 
 private val DarkAppColors = AppColors(
     primary = Color(0x811717),
     onPrimary = Color.Black,
+    onPrimaryLight = Color.White,
     secondary = Color(0xAE5454),
     onSecondary = Color.Black,
     background = Color(0xFF121212),
@@ -63,6 +72,7 @@ private val DarkAppColors = AppColors(
     disabledContainer = Color.LightGray,
     disabledContent = Color.Black,
     container = Color.LightGray,
+    containerCard = Color(0xFFF3F6F4)
 )
 
 
@@ -107,8 +117,10 @@ data class AppSize(
     val paddingSmall: Dp = 8.dp,
     val paddingMedium: Dp = 16.dp,
     val paddingLarge: Dp = 24.dp,
+
     val cornerRadius: Dp = 24.dp,
-    val titleSize: TextUnit = 34.sp,
+
+    val titleSize: TextUnit = 30.sp,
     val subtitleSize: TextUnit = 28.sp,
     val fieldsSize: TextUnit = 18.sp,
     val bodySize: TextUnit = 14.sp,

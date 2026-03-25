@@ -20,27 +20,28 @@ import org.michorga.everythinginone.theme.textFieldCustomColors
 
 @Composable
 fun InputTextField(
+    title: String,
     modifier: Modifier = Modifier,
-    addTransaction: TransactionModel,
-    amountError: String?,
-    onAmountChange: (String) -> Unit,
+    text: String?,
+    onTextChange: (String) -> Unit,
+    error: String? = null,
+    singleLine: Boolean = true
 ){
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(sizes.paddingSmall)
     ) {
         Text(
-            text = stringResource(Res.string.add_an_amount_text_field),
+            text = title,
             fontSize = sizes.fieldsSize,
             fontWeight = Bold,
             color = colors.title
         )
         OutlinedTextField(
-            value = addTransaction.amount,
-            onValueChange = onAmountChange,
-            isError = amountError != null,
+            value = text ?: "",
+            onValueChange = onTextChange,
+            isError = error != null,
             supportingText = {
-                amountError?.let {
+                error?.let {
                     Text(text = it, color = colors.error)
                 }
             },
@@ -51,7 +52,7 @@ fun InputTextField(
                 color = colors.onSurface,
                 fontSize = sizes.bodySize
             ),
-            singleLine = true
+            singleLine = singleLine
         )
     }
 }

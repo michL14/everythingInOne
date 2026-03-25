@@ -20,9 +20,7 @@ fun ExpenseToolBar(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ){
         IconButton(
-            onClick = {
-
-            },
+            onClick = {},
             modifier = Modifier
         ) { AppIcons.IconButtonAdd() }
 

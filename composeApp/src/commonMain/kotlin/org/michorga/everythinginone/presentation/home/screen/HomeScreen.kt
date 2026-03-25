@@ -14,6 +14,7 @@ import org.michorga.everythinginone.theme.AppTheme
 fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
+    onNavigateToPayment: () -> Unit,
 ) {
     val colors = AppTheme.colors
     val sizes = AppTheme.sizes
@@ -40,7 +41,7 @@ fun HomeScreen(
         item {
             CurrentBalanceSection(
                 modifier = modifier,
-                onAddClick = { viewModel.navigateToAddPayment() }
+                onAddClick = { onNavigateToPayment() }
             )
         }
 

@@ -10,15 +10,22 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
-import org.michorga.everythinginone.domain.model.Category
 import org.michorga.everythinginone.domain.usecase.category.GetAllCategoriesUseCase
 import org.michorga.everythinginone.domain.usecase.transaction.TransactionUseCases
 import org.michorga.everythinginone.presentation.payment.mapper.toDomain
+import org.michorga.everythinginone.presentation.payment.mapper.toUIList
+import org.michorga.everythinginone.presentation.payment.mapper.toUIModel
 import org.michorga.everythinginone.presentation.payment.model.AmountError
+import org.michorga.everythinginone.presentation.payment.model.CategoryModelUI
 import org.michorga.everythinginone.presentation.payment.model.TransactionModel
+import org.michorga.everythinginone.presentation.payment.model.TransactionUI
 
 data class PaymentUiState(
-    val transaction: TransactionModel = TransactionModel("", isPaid = true, categoryName = 0L),
+    val transaction: TransactionModel = TransactionModel(
+        amount = "",
+        isPaid = true,
+        categoryName = 0L,
+    ),
     val amountError: AmountError? = null,
     val isBottomSheetVisible: Boolean = false,
     val isLoading: Boolean = false,
@@ -33,21 +40,25 @@ class PaymentViewModel(
     private val _uiState = MutableStateFlow(PaymentUiState())
     val uiState: StateFlow<PaymentUiState> = _uiState
 
-    private val _categories = MutableStateFlow<List<Category>>(emptyList())
-    val categories: StateFlow<List<Category>> = _categories
+    private val _categories = MutableStateFlow<List<CategoryModelUI>>(emptyList())
+    val categories: StateFlow<List<CategoryModelUI>> = _categories
 
-    var selectedCategoryId by mutableStateOf<Long>(1)
+    private val _listOfTransactions = MutableStateFlow<List<TransactionUI>>(emptyList())
+    val listOfTransactions: StateFlow<List<TransactionUI>> = _listOfTransactions
+
+    var selectedCategoryId by mutableStateOf<Long>(2)
         private set
 
 
     init {
         getCategoryList()
+        getAllTransactions()
     }
 
     fun getCategoryList(){
         viewModelScope.launch {
             getAllCategoriesUseCase.invoke().collect { list ->
-                _categories.value = list
+                _categories.value = list.toUIList()
                 if (list.isNotEmpty()) {
                     val firstCategoryId = list.first().id
                     _uiState.update {
@@ -55,6 +66,14 @@ class PaymentViewModel(
                     }
                     selectedCategoryId = firstCategoryId
                 }
+            }
+        }
+    }
+
+    fun getAllTransactions(){
+        viewModelScope.launch {
+            transactionUseCases.getTransactions.invoke().collect { list ->
+                _listOfTransactions.value = list.map { it.toUIModel() }
             }
         }
     }
@@ -73,6 +92,12 @@ class PaymentViewModel(
                 transaction = it.transaction.copy(amount = amount),
                 amountError = error
             )
+        }
+    }
+
+    fun onDescriptionChange(description: String) {
+        _uiState.update {
+            it.copy(transaction = it.transaction.copy(description = description))
         }
     }
 

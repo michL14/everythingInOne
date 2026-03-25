@@ -3,6 +3,7 @@ package org.michorga.everythinginone.theme
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 
 
@@ -11,7 +12,7 @@ fun filterChipCustomColors() = FilterChipDefaults.filterChipColors(
     containerColor = AppTheme.colors.surface,
     labelColor = AppTheme.colors.onSurface,
     selectedContainerColor = AppTheme.colors.primary,
-    selectedLabelColor = AppTheme.colors.onPrimary,
+    selectedLabelColor = AppTheme.colors.onPrimaryLight,
     selectedLeadingIconColor = AppTheme.colors.onPrimary,
     disabledContainerColor = AppTheme.colors.secondary.copy(alpha = 0.5f)
 )
@@ -33,4 +34,10 @@ fun textFieldCustomColors() = OutlinedTextFieldDefaults.colors(
     cursorColor = AppTheme.colors.primary,
     focusedContainerColor = AppTheme.colors.background,
     unfocusedContainerColor = AppTheme.colors.background
+)
+
+@Composable
+fun colorTopAppBar() = TopAppBarDefaults.topAppBarColors(
+    containerColor = AppTheme.colors.background,
+    titleContentColor = AppTheme.colors.title,
 )

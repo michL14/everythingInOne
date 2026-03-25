@@ -1,10 +1,7 @@
 package org.michorga.everythinginone.data.mapper
 
-import app.cash.sqldelight.Transacter
-import org.michorga.everythinginone.domain.model.Transaction
 import org.michorga.everythinginone.data.local.database.SelectAllPayments
-import org.michorga.everythinginone.domain.model.CategoryEnum
-import org.michorga.everythinginone.presentation.payment.model.TransactionModel
+import org.michorga.everythinginone.domain.model.Transaction
 
 fun SelectAllPayments.toDomain(): Transaction {
     val isPaidConverted = this.isPaid == 1L
@@ -12,19 +9,23 @@ fun SelectAllPayments.toDomain(): Transaction {
         "Subscription" -> Transaction.Subscription(
             id = id,
             amount = amount,
-            isPaid = isPaidConverted
+            isPaid = isPaidConverted,
+            description = description,
         )
         "Refund" -> Transaction.Refund(
             id = id,
-            amount = amount
+            amount = amount,
+            description = description,
         )
         "Expense" -> Transaction.Expense(
             id = id,
-            amount = amount
+            amount = amount,
+            description = description
         )
         else -> Transaction.Expense(
             id = id,
-            amount = amount
+            amount = amount,
+            description = description,
         )
     }
 }

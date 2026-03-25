@@ -5,22 +5,26 @@ sealed class Transaction {
     data class Subscription(
         val id: Long,
         val amount: Double,
-        val isPaid: Boolean
+        val isPaid: Boolean,
+        val description: String? = null
     ) : Transaction()
 
     data class Expense(
         val id: Long,
-        val amount: Double
+        val amount: Double,
+        val description: String? = null
     ) : Transaction()
 
     data class Refund(
         val id: Long,
-        val amount: Double
+        val amount: Double,
+        val description: String? = null,
     ) : Transaction()
 }
 
 enum class CategoryEnum(val id: Long) {
-    SUBSCRIPTION(1),
-    EXPENSE(2),
-    REFUND(3)
+    ALL(1),
+    SUBSCRIPTION(2),
+    EXPENSE(3),
+    REFUND(4)
 }

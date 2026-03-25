@@ -7,6 +7,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import everythinginone.composeapp.generated.resources.Res
 import everythinginone.composeapp.generated.resources.bottom_sheet_summary_transaction_amount
+import everythinginone.composeapp.generated.resources.bottom_sheet_summary_transaction_category
+import everythinginone.composeapp.generated.resources.bottom_sheet_summary_transaction_description
 import everythinginone.composeapp.generated.resources.bottom_sheet_summary_transaction_modify_button
 import everythinginone.composeapp.generated.resources.bottom_sheet_summary_transaction_title
 import everythinginone.composeapp.generated.resources.bottom_sheet_summary_transaction_validate_button
@@ -36,19 +38,23 @@ fun TransactionSummaryBottomSheet(
             style = MaterialTheme.typography.titleLarge,
             color = colors.title
         )
-
         Text(
             text = stringResource(Res.string.bottom_sheet_summary_transaction_amount) + "${transaction.amount}€",
             style = MaterialTheme.typography.bodyLarge
         )
+        if(!transaction.description.isNullOrEmpty()){
+            Text(
+                text = stringResource(Res.string.bottom_sheet_summary_transaction_description) + transaction.description,
+                style = MaterialTheme.typography.bodyLarge
+            )
+        }
         Text(
-            text = stringResource(Res.string.bottom_sheet_summary_transaction_amount)+ "${transaction.categoryName.toCategoryEnum()}",
+            text = stringResource(Res.string.bottom_sheet_summary_transaction_category)+ "${transaction.categoryName.toCategoryEnum()}",
             style = MaterialTheme.typography.bodyLarge
         )
 
-        Spacer(modifier = Modifier.height(sizes.paddingMedium))
-
         Row(
+            modifier = Modifier.padding(top = sizes.paddingMedium),
             horizontalArrangement = Arrangement.spacedBy(sizes.paddingMedium),
             verticalAlignment = Alignment.CenterVertically
         ) {

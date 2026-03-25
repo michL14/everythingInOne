@@ -1,33 +1,36 @@
 CREATE TABLE categoryEntity (
-    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL -- 'Subscription', 'Expense', 'Refund'
+    id INTEGER NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE paymentEntity (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     amount REAL NOT NULL,
     categoryId INTEGER NOT NULL,
-    isPaid INTEGER DEFAULT 0, -- Plus de "AS Boolean" ici
+    isPaid INTEGER DEFAULT 0,
+    description TEXT,
     FOREIGN KEY (categoryId) REFERENCES categoryEntity(id) ON DELETE CASCADE
 );
 
 -- Seed initial categories
-INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (1, 'Subscription');
-INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (2, 'Expense');
-INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (3, 'Refund');
+INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (1, 'All');
+INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (2, 'Subscription');
+INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (3, 'Expense');
+INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (4, 'Refund');
 
 selectAllPayments:
 SELECT
     p.id,
     p.amount,
     p.isPaid,
+    p.description,
     c.name AS categoryName
 FROM paymentEntity AS p
 JOIN categoryEntity AS c ON p.categoryId = c.id;
 
 insertPayment:
-INSERT INTO paymentEntity(amount, categoryId, isPaid)
-VALUES (?, ?, ?);
+INSERT INTO paymentEntity(amount, categoryId, isPaid, description)
+VALUES (?, ?, ?, ?);
 
 deletePayment:
 DELETE FROM paymentEntity WHERE id = ?;
@@ -61,6 +64,7 @@ SELECT
     p.id,
     p.amount,
     p.isPaid,
+    p.description,
     c.name AS categoryName
 FROM paymentEntity AS p
 JOIN categoryEntity AS c ON p.categoryId = c.id

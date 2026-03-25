@@ -9,7 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import everythinginone.composeapp.generated.resources.Res
+import everythinginone.composeapp.generated.resources.add_a_description_text_field
 import everythinginone.composeapp.generated.resources.add_a_transaction
+import everythinginone.composeapp.generated.resources.add_an_amount_text_field
 import everythinginone.composeapp.generated.resources.bottom_sheet_success_button
 import everythinginone.composeapp.generated.resources.bottom_sheet_success_message
 import everythinginone.composeapp.generated.resources.payment_process
@@ -36,10 +38,16 @@ fun AddPaymentScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val errorMessage = AmountErrorMapper.toMessage(uiState.amountError)
+    val categories = viewModel.categories.collectAsState().value
+
+    LaunchedEffect(uiState.isLoading){
+        viewModel.onCategorySelectedChanged(2)
+    }
 
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
+                modifier = modifier,
                 title = {
                     Text(
                         text = stringResource(Res.string.add_a_transaction),
@@ -67,24 +75,32 @@ fun AddPaymentScreen(
                 painter = painterResource(Res.drawable.payment_process),
                 contentDescription = "Illustration payment"
             )
-            Spacer(modifier = Modifier.height(sizes.paddingLarge))
 
             CategorySelector(
-                categories = viewModel.categories.collectAsState().value,
+                modifier = Modifier.padding(vertical = sizes.paddingLarge),
+                categories = categories.filter { it.id != 1L },
                 selectedCategory = viewModel.selectedCategoryId,
                 onCategoryClick = { viewModel.onCategorySelectedChanged(it) }
             )
-            Spacer(modifier = Modifier.height(sizes.paddingLarge))
 
             InputTextField(
-                modifier = modifier,
-                addTransaction = uiState.transaction,
-                onAmountChange = { viewModel.onAmountChange(it) },
-                amountError = errorMessage
+                modifier = Modifier.padding(top = sizes.paddingMedium),
+                title = stringResource(Res.string.add_an_amount_text_field),
+                text = uiState.transaction.amount,
+                onTextChange = { viewModel.onAmountChange(it) },
+                error = errorMessage
             )
-            Spacer(modifier = Modifier.height(sizes.paddingLarge))
+            InputTextField(
+                modifier = Modifier.padding(top = sizes.paddingMedium),
+                title = stringResource(Res.string.add_a_description_text_field),
+                text = uiState.transaction.description,
+                onTextChange = { viewModel.onDescriptionChange(it) },
+                singleLine = false
+            )
             Column(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .padding(vertical = sizes.paddingLarge)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ){
                 PrimaryButton(
@@ -117,19 +133,19 @@ fun AddPaymentScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             SuccessAnimation()
-                            Spacer(modifier = Modifier.height(sizes.paddingMedium))
                             Text(
+                                modifier = Modifier.padding(top = sizes.paddingMedium),
                                 text = stringResource(Res.string.bottom_sheet_success_message),
                                 style = MaterialTheme.typography.titleMedium
                             )
-                            Spacer(modifier = Modifier.height(sizes.paddingMedium))
                             PrimaryButton(
                                 onClick = {
                                     viewModel.hideBottomSheet()
                                     navigateHome()
                                     viewModel.resetSuccess()
                                 },
-                                modifier = Modifier,
+                                modifier = Modifier
+                                    .padding(top = sizes.paddingMedium),
                                 primaryButtonLabel = stringResource(Res.string.bottom_sheet_success_button),
                             )
                         }

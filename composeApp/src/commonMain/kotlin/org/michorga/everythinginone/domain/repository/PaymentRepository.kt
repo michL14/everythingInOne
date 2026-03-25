@@ -37,19 +37,22 @@ class PaymentRepositoryImpl(
                 is Transaction.Subscription -> queries.insertPayment(
                     amount = transaction.amount,
                     categoryId = CategoryEnum.SUBSCRIPTION.id,
-                    isPaid = if (transaction.isPaid) 1L else 0L
+                    isPaid = if (transaction.isPaid) 1L else 0L,
+                    description = transaction.description
                 )
 
                 is Transaction.Expense -> queries.insertPayment(
                     amount = transaction.amount,
                     categoryId = CategoryEnum.EXPENSE.id,
-                    isPaid = 1L
+                    isPaid = 1L,
+                    description = transaction.description
                 )
 
                 is Transaction.Refund -> queries.insertPayment(
                     amount = transaction.amount,
                     categoryId = CategoryEnum.REFUND.id,
-                    isPaid = 1L
+                    isPaid = 1L,
+                    description = transaction.description
                 )
             }
         }

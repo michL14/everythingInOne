@@ -129,3 +129,28 @@ sqldelight {
         }
     }
 }
+
+tasks.register("resetDatabase") {
+    group = "database"
+    description = "Clean + regenerate SQLDelight + delete local DB"
+
+    doLast {
+        println("🧹 Cleaning build...")
+    }
+
+    dependsOn("clean")
+
+    finalizedBy("generateSqlDelightInterface")
+
+    doLast {
+        println("🗑️ Deleting local database files (desktop)...")
+
+        val dbFile = file("app.db")
+        if (dbFile.exists()) {
+            dbFile.delete()
+            println("✅ Deleted: ${dbFile.absolutePath}")
+        } else {
+            println("ℹ️ No DB file found")
+        }
+    }
+}

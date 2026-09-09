@@ -25,7 +25,6 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.CirclePlus
 import everythinginone.composeapp.generated.resources.Res
 import everythinginone.composeapp.generated.resources.current_balance_label
-import everythinginone.composeapp.generated.resources.home_salutation
 import org.jetbrains.compose.resources.stringResource
 import org.michorga.everythinginone.theme.AppTheme.colors
 import org.michorga.everythinginone.theme.AppTheme.sizes
@@ -41,7 +40,7 @@ fun CurrentBalanceSection(
             .fillMaxWidth()
             .height(130.dp)
             .background(
-                brush = Brush.linearGradient(listOf(colors.secondary, colors.primary)),
+                brush = Brush.linearGradient(listOf(colors.background, colors.primary)),
                 shape = RoundedCornerShape(sizes.cornerRadius)
             )
             .padding(sizes.paddingLarge),

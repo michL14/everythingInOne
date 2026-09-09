@@ -9,6 +9,7 @@ CREATE TABLE paymentEntity (
     categoryId INTEGER NOT NULL,
     isPaid INTEGER DEFAULT 0,
     description TEXT,
+    month INTEGER NOT NULL,
     FOREIGN KEY (categoryId) REFERENCES categoryEntity(id) ON DELETE CASCADE
 );
 
@@ -24,13 +25,14 @@ SELECT
     p.amount,
     p.isPaid,
     p.description,
+    p.month,
     c.name AS categoryName
 FROM paymentEntity AS p
 JOIN categoryEntity AS c ON p.categoryId = c.id;
 
 insertPayment:
-INSERT INTO paymentEntity(amount, categoryId, isPaid, description)
-VALUES (?, ?, ?, ?);
+INSERT INTO paymentEntity(amount, categoryId, isPaid, description, month)
+VALUES (?, ?, ?, ?, ?);
 
 deletePayment:
 DELETE FROM paymentEntity WHERE id = ?;

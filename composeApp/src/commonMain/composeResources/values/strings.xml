@@ -12,6 +12,9 @@
     <!-- Payment Screen -->
     <string name="payment_title">Payment</string>
     <string name="default_description_payment">Other</string>
+    <string name="month_title_selector">Month</string>
+
+    <!-- Upcoming payment -->
 
 
     <!-- Add transaction -->

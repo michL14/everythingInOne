@@ -12,6 +12,8 @@ class HomeViewModel : ViewModel(), KoinComponent {
 
     private val scope = CoroutineScope(Dispatchers.Default)
 
+
+
     /** Navigue vers l’écran "Add Payment" dans la section Payment */
     fun navigateToAddPayment() {
         AppState.currentScreen = Screen.PAYMENT

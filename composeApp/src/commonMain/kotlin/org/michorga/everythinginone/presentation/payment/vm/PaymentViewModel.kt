@@ -9,6 +9,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
 import org.koin.core.component.KoinComponent
 import org.michorga.everythinginone.domain.usecase.category.GetAllCategoriesUseCase
 import org.michorga.everythinginone.domain.usecase.transaction.TransactionUseCases
@@ -17,14 +20,18 @@ import org.michorga.everythinginone.presentation.payment.mapper.toUIList
 import org.michorga.everythinginone.presentation.payment.mapper.toUIModel
 import org.michorga.everythinginone.presentation.payment.model.AmountError
 import org.michorga.everythinginone.presentation.payment.model.CategoryModelUI
+import org.michorga.everythinginone.presentation.payment.model.Month
 import org.michorga.everythinginone.presentation.payment.model.TransactionModel
 import org.michorga.everythinginone.presentation.payment.model.TransactionUI
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 data class PaymentUiState(
     val transaction: TransactionModel = TransactionModel(
         amount = "",
         isPaid = true,
         categoryName = 0L,
+        month = 1
     ),
     val amountError: AmountError? = null,
     val isBottomSheetVisible: Boolean = false,
@@ -49,13 +56,24 @@ class PaymentViewModel(
     var selectedCategoryId by mutableStateOf<Long>(2)
         private set
 
+    @OptIn(ExperimentalTime::class)
+    var selectedMonth by mutableStateOf(
+        Month.fromNumber(
+            Clock.System
+                .now()
+                .toLocalDateTime(TimeZone.currentSystemDefault())
+                .month.number
+        )
+    )
+        private set
+
 
     init {
         getCategoryList()
         getAllTransactions()
     }
 
-    fun getCategoryList(){
+    fun getCategoryList() {
         viewModelScope.launch {
             getAllCategoriesUseCase.invoke().collect { list ->
                 _categories.value = list.toUIList()
@@ -70,7 +88,7 @@ class PaymentViewModel(
         }
     }
 
-    fun getAllTransactions(){
+    fun getAllTransactions() {
         viewModelScope.launch {
             transactionUseCases.getTransactions.invoke().collect { list ->
                 _listOfTransactions.value = list.map { it.toUIModel() }

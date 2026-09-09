@@ -38,6 +38,6 @@ fun textFieldCustomColors() = OutlinedTextFieldDefaults.colors(
 
 @Composable
 fun colorTopAppBar() = TopAppBarDefaults.topAppBarColors(
-    containerColor = AppTheme.colors.background,
+    containerColor = AppTheme.colors.containerCard,
     titleContentColor = AppTheme.colors.title,
 )

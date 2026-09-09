@@ -1,15 +1,14 @@
 package org.michorga.everythinginone.presentation.home.navigation
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import org.michorga.everythinginone.presentation.payment.screen.PaymentScreen
-import org.michorga.everythinginone.presentation.payment.vm.PaymentViewModel
 import org.michorga.everythinginone.presentation.home.screen.HomeScreen
 import org.michorga.everythinginone.presentation.home.vm.HomeViewModel
 import org.michorga.everythinginone.presentation.payment.screen.AddPaymentScreen
+import org.michorga.everythinginone.presentation.payment.screen.PaymentScreen
+import org.michorga.everythinginone.presentation.payment.vm.PaymentViewModel
+import org.michorga.everythinginone.presentation.subscription.screen.UpcomingPaymentScreen
+import org.michorga.everythinginone.presentation.subscription.vm.UpcomingPaymentViewModel
 import org.michorga.everythinginone.theme.AppTheme.colors
 
 enum class Screen(val label: String, val subScreens: List<SubScreen> = emptyList()) {
@@ -33,6 +32,7 @@ enum class SubScreen(val label: String) {
 
 @Composable
 fun AppContent(
+    upcomingPaymentViewModel: UpcomingPaymentViewModel,
     paymentViewModel: PaymentViewModel,
     homeViewModel: HomeViewModel,
 ) {
@@ -44,6 +44,10 @@ fun AppContent(
                 onNavigateToPayment = {
                     AppState.currentScreen = Screen.PAYMENT
                     AppState.currentSubScreen = SubScreen.RECENT_TRANSACTIONS
+                },
+                onNavigateToUpcomingPayment = {
+                    AppState.currentScreen = Screen.PAYMENT
+                    AppState.currentSubScreen = SubScreen.UPCOMING_PAYMENT
                 }
             )
         }
@@ -53,17 +57,20 @@ fun AppContent(
                 SubScreen.PAYMENT -> PaymentScreen(
                     viewModel = paymentViewModel,
                     modifier = Modifier,
+                    onBackClick = { AppState.currentScreen = Screen.HOME },
                     onAddPaymentClick = { AppState.currentSubScreen = SubScreen.ADD_PAYMENT }
                 )
                 SubScreen.RECENT_TRANSACTIONS -> PaymentScreen(
                     viewModel = paymentViewModel,
                     modifier = Modifier,
+                    onBackClick = { AppState.currentScreen = Screen.HOME },
                     onAddPaymentClick = { AppState.currentSubScreen = SubScreen.ADD_PAYMENT }
                 )
-                SubScreen.UPCOMING_PAYMENT -> PaymentScreen(
-                    viewModel = paymentViewModel,
+                SubScreen.UPCOMING_PAYMENT -> UpcomingPaymentScreen(
+                    viewModel = upcomingPaymentViewModel,
                     modifier = Modifier,
-                    onAddPaymentClick = { AppState.currentSubScreen = SubScreen.ADD_PAYMENT }
+                    onBackClick = { AppState.currentScreen = Screen.HOME },
+//                    onAddPaymentClick = { AppState.currentSubScreen = SubScreen.ADD_PAYMENT }
                 )
                 SubScreen.ADD_PAYMENT -> AddPaymentScreen(
                     viewModel = paymentViewModel,

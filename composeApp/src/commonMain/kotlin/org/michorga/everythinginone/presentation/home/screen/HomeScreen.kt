@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import org.michorga.everythinginone.presentation.home.components.MainTopBar
 import org.michorga.everythinginone.presentation.home.vm.HomeViewModel
-import org.michorga.everythinginone.presentation.subscription.SubscriptionSection
 import org.michorga.everythinginone.theme.AppTheme
 
 @Composable
@@ -15,6 +14,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel,
     onNavigateToPayment: () -> Unit,
+    onNavigateToUpcomingPayment: () -> Unit
 ) {
     val colors = AppTheme.colors
     val sizes = AppTheme.sizes
@@ -31,7 +31,7 @@ fun HomeScreen(
 
         item {
             MainTopBar(
-                modifier = modifier
+                modifier = Modifier
             )
         }
 
@@ -40,8 +40,8 @@ fun HomeScreen(
          */
         item {
             CurrentBalanceSection(
-                modifier = modifier,
-                onAddClick = { onNavigateToPayment() }
+                modifier = Modifier,
+                onAddClick = onNavigateToPayment
             )
         }
 
@@ -49,7 +49,10 @@ fun HomeScreen(
          * Upcoming Payments Section
          */
         item {
-            SubscriptionSection(modifier = Modifier)
+            UpcomingPaymentSection(
+                modifier = Modifier,
+                onSeeAllClick = onNavigateToUpcomingPayment,
+            )
         }
 
         /**
@@ -57,12 +60,17 @@ fun HomeScreen(
          */
         item {
             RecentTransactionSection(
-                modifier = modifier,
+                modifier = Modifier,
 //                items = emptyList()
             )
         }
 
-        item { Spacer(modifier = Modifier.height(sizes.paddingLarge * 3)) }
+        item {
+            Spacer(
+                modifier = Modifier
+                    .height(sizes.paddingLarge * 3)
+            )
+        }
     }
 }
 

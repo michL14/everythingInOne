@@ -1,13 +1,12 @@
 package org.michorga.everythinginone.presentation.payment.model
 
-import androidx.compose.ui.graphics.Color
-
 data class TransactionUI(
     val id: Long,
     val amount: String,
     val description: String? = null,
     val categoryName: String,
-    val isPaid: Boolean
+    val isPaid: Boolean,
+    val month: Int,
 )
 
 enum class CategoryUI(val value: String) {

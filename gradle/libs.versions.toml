@@ -45,6 +45,7 @@ androidx-lifecycle-viewmodel = { group = "org.jetbrains.androidx.lifecycle", nam
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-ui-tooling" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-multiplatform" }
 composeIcons-tablerIcons = { module = "br.com.devsrsouza.compose.icons:tabler-icons", version.ref = "composeIcons" }
 
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }

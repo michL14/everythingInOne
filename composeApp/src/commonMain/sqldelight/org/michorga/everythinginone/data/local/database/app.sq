@@ -19,6 +19,42 @@ INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (2, 'Subscription');
 INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (3, 'Expense');
 INSERT OR IGNORE INTO categoryEntity(id, name) VALUES (4, 'Refund');
 
+-- Salary added to the current balance (one row per monthly salary added)
+CREATE TABLE salaryEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    amount REAL NOT NULL,
+    yearMonth TEXT NOT NULL,
+    isRecurring INTEGER NOT NULL DEFAULT 0
+);
+
+-- Single-row configuration holding the recurring monthly salary
+CREATE TABLE salaryConfig (
+    id INTEGER NOT NULL PRIMARY KEY,
+    recurringAmount REAL NOT NULL DEFAULT 0,
+    lastAppliedYearMonth TEXT
+);
+INSERT OR IGNORE INTO salaryConfig(id, recurringAmount, lastAppliedYearMonth) VALUES (1, 0.0, NULL);
+
+-- Subscriptions that debit the current balance every month until disabled or deleted.
+-- dayOfMonth is the debit day (1..31, defaults to the 1st of each month).
+CREATE TABLE subscriptionEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    amount REAL NOT NULL,
+    dayOfMonth INTEGER NOT NULL DEFAULT 1,
+    isActive INTEGER NOT NULL DEFAULT 1,
+    lastAppliedYearMonth TEXT
+);
+
+-- Ledger of every monthly debit applied for a subscription (kept even if the
+-- subscription is later deleted, so the historical balance stays consistent).
+CREATE TABLE subscriptionChargeEntity (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    subscriptionId INTEGER NOT NULL,
+    amount REAL NOT NULL,
+    yearMonth TEXT NOT NULL
+);
+
 selectAllPayments:
 SELECT
     p.id,
@@ -71,3 +107,105 @@ SELECT
 FROM paymentEntity AS p
 JOIN categoryEntity AS c ON p.categoryId = c.id
 WHERE c.id = ?;
+
+--- Requêtes pour le salaire (Current Balance) ---
+
+-- Ajouter un salaire du mois
+insertSalary:
+INSERT INTO salaryEntity(amount, yearMonth, isRecurring)
+VALUES (?, ?, ?);
+
+-- Somme totale des salaires ajoutés (utilisée pour le Current Balance)
+selectTotalSalary:
+SELECT COALESCE(SUM(amount), 0.0) FROM salaryEntity;
+
+-- Récupérer tous les salaires
+selectAllSalaries:
+SELECT * FROM salaryEntity;
+
+-- Supprimer un salaire ajouté
+deleteSalary:
+DELETE FROM salaryEntity WHERE id = ?;
+
+-- Configuration du salaire récurrent
+selectSalaryConfig:
+SELECT * FROM salaryConfig WHERE id = 1;
+
+-- Mettre à jour le montant du salaire récurrent
+updateRecurringAmount:
+UPDATE salaryConfig SET recurringAmount = ? WHERE id = 1;
+
+-- Mémoriser le dernier mois où le salaire récurrent a été appliqué
+updateLastAppliedYearMonth:
+UPDATE salaryConfig SET lastAppliedYearMonth = ? WHERE id = 1;
+
+--- Requêtes pour les abonnements (Subscriptions) ---
+
+-- Ajouter un nouvel abonnement
+insertSubscription:
+INSERT INTO subscriptionEntity(name, amount, dayOfMonth, isActive, lastAppliedYearMonth)
+VALUES (?, ?, ?, ?, ?);
+
+-- Récupérer tous les abonnements (actifs en premier)
+selectAllSubscriptions:
+SELECT * FROM subscriptionEntity ORDER BY isActive DESC, name ASC;
+
+-- Récupérer uniquement les abonnements actifs
+selectActiveSubscriptions:
+SELECT * FROM subscriptionEntity WHERE isActive = 1;
+
+-- Récupérer un abonnement par son identifiant
+selectSubscriptionById:
+SELECT * FROM subscriptionEntity WHERE id = ?;
+
+-- Modifier le nom, le montant et le jour de débit d'un abonnement
+updateSubscription:
+UPDATE subscriptionEntity SET name = ?, amount = ?, dayOfMonth = ? WHERE id = ?;
+
+-- Activer / désactiver un abonnement
+setSubscriptionActive:
+UPDATE subscriptionEntity SET isActive = ? WHERE id = ?;
+
+-- Mémoriser le dernier mois débité pour un abonnement (idempotence)
+updateSubscriptionLastApplied:
+UPDATE subscriptionEntity SET lastAppliedYearMonth = ? WHERE id = ?;
+
+-- Supprimer un abonnement (les débits passés restent dans le ledger)
+deleteSubscription:
+DELETE FROM subscriptionEntity WHERE id = ?;
+
+-- Ajouter un débit mensuel dans le ledger
+insertSubscriptionCharge:
+INSERT INTO subscriptionChargeEntity(subscriptionId, amount, yearMonth)
+VALUES (?, ?, ?);
+
+-- Supprimer le débit d'un abonnement pour un mois donné (annulation d'un paiement)
+deleteSubscriptionChargeForMonth:
+DELETE FROM subscriptionChargeEntity WHERE subscriptionId = ? AND yearMonth = ?;
+
+-- Somme totale des débits d'abonnements appliqués
+selectTotalSubscriptionCharges:
+SELECT COALESCE(SUM(amount), 0.0) FROM subscriptionChargeEntity;
+
+-- Historique de tous les débits d'abonnement (avec le nom de l'abonnement,
+-- conservé même si l'abonnement a été supprimé grâce au LEFT JOIN)
+selectAllSubscriptionCharges:
+SELECT
+    sc.id,
+    sc.amount,
+    sc.yearMonth,
+    s.name AS subscriptionName
+FROM subscriptionChargeEntity AS sc
+LEFT JOIN subscriptionEntity AS s ON sc.subscriptionId = s.id;
+
+-- Current Balance = salaires ajoutés
+--   - débits d'abonnements appliqués
+--   - transactions d'abonnement (categoryId = 2) et de dépense (categoryId = 3)
+--   + remboursements (categoryId = 4)
+selectCurrentBalance:
+SELECT
+    (SELECT COALESCE(SUM(amount), 0.0) FROM salaryEntity)
+    - (SELECT COALESCE(SUM(amount), 0.0) FROM subscriptionChargeEntity)
+    - (SELECT COALESCE(SUM(amount), 0.0) FROM paymentEntity WHERE categoryId IN (2, 3))
+    + (SELECT COALESCE(SUM(amount), 0.0) FROM paymentEntity WHERE categoryId = 4);
+

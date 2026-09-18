@@ -34,7 +34,8 @@ fun UpcomingPaymentSection(
             text = stringResource(Res.string.upcoming_payment_title),
             fontWeight = FontWeight.Bold,
             fontSize = sizes.subtitleSize,
-            color = colors.title
+            color = colors.title,
+            modifier = Modifier.clickable(onClick = onSeeAllClick)
         )
         Text(
             text = stringResource(Res.string.see_all_label),

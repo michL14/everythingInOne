@@ -13,5 +13,6 @@ enum class CategoryUI(val value: String) {
     ALL("All"),
     SUBSCRIPTION("Subscription"),
     EXPENSE("Expense"),
-    REFUND("Refund")
+    REFUND("Refund"),
+    SALARY("Salary")
 }

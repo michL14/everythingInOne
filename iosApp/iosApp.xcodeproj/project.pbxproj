@@ -206,7 +206,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\n# Xcode herite parfois d'un JAVA_HOME invalide: on force un JDK valide pour Gradle.\nif [ -z \"$JAVA_HOME\" ] || [ ! -x \"$JAVA_HOME/bin/java\" ]; then\n  export JAVA_HOME=$(/usr/libexec/java_home -v 21 2>/dev/null || /usr/libexec/java_home)\nfi\ncd \"$SRCROOT/..\"\n./gradlew :composeApp:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

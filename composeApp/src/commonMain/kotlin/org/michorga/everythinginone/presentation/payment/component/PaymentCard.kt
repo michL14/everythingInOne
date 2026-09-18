@@ -31,7 +31,9 @@ fun PaymentCard(
     var container: Color
     var onContainer: Color
     var isRefund: Boolean
-    if (transaction.categoryName == CategoryUI.REFUND.value) {
+    if (transaction.categoryName == CategoryUI.REFUND.value ||
+        transaction.categoryName == CategoryUI.SALARY.value
+    ) {
         container = colors.refund
         onContainer = colors.onRefund
         isRefund = true

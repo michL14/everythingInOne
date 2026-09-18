@@ -41,7 +41,12 @@ fun AppContent(
             HomeScreen(
                 viewModel = homeViewModel,
                 modifier = Modifier,
-                onNavigateToPayment = {
+                onNavigateToAddPayment = {
+                    AppState.addPaymentFromHome = true
+                    AppState.currentScreen = Screen.PAYMENT
+                    AppState.currentSubScreen = SubScreen.ADD_PAYMENT
+                },
+                onNavigateToRecentTransactions = {
                     AppState.currentScreen = Screen.PAYMENT
                     AppState.currentSubScreen = SubScreen.RECENT_TRANSACTIONS
                 },
@@ -58,13 +63,19 @@ fun AppContent(
                     viewModel = paymentViewModel,
                     modifier = Modifier,
                     onBackClick = { AppState.currentScreen = Screen.HOME },
-                    onAddPaymentClick = { AppState.currentSubScreen = SubScreen.ADD_PAYMENT }
+                    onAddPaymentClick = {
+                        AppState.addPaymentFromHome = false
+                        AppState.currentSubScreen = SubScreen.ADD_PAYMENT
+                    }
                 )
                 SubScreen.RECENT_TRANSACTIONS -> PaymentScreen(
                     viewModel = paymentViewModel,
                     modifier = Modifier,
                     onBackClick = { AppState.currentScreen = Screen.HOME },
-                    onAddPaymentClick = { AppState.currentSubScreen = SubScreen.ADD_PAYMENT }
+                    onAddPaymentClick = {
+                        AppState.addPaymentFromHome = false
+                        AppState.currentSubScreen = SubScreen.ADD_PAYMENT
+                    }
                 )
                 SubScreen.UPCOMING_PAYMENT -> UpcomingPaymentScreen(
                     viewModel = upcomingPaymentViewModel,
@@ -75,8 +86,19 @@ fun AppContent(
                 SubScreen.ADD_PAYMENT -> AddPaymentScreen(
                     viewModel = paymentViewModel,
                     modifier = Modifier.background(colors.background),
-                    onBackClick = { AppState.currentSubScreen = SubScreen.RECENT_TRANSACTIONS },
-                    navigateHome = { AppState.currentScreen = Screen.HOME }
+                    onBackClick = {
+                        if (AppState.addPaymentFromHome) {
+                            AppState.addPaymentFromHome = false
+                            AppState.currentScreen = Screen.HOME
+                            AppState.currentSubScreen = null
+                        } else {
+                            AppState.currentSubScreen = SubScreen.RECENT_TRANSACTIONS
+                        }
+                    },
+                    navigateHome = {
+                        AppState.addPaymentFromHome = false
+                        AppState.currentScreen = Screen.HOME
+                    }
                 )
                 null -> {
                     AppState.currentSubScreen = SubScreen.RECENT_TRANSACTIONS

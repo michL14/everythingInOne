@@ -9,9 +9,49 @@
     <string name="current_balance_label">Current Balance</string>
     <string name="see_all_label">See All</string>
 
+    <!-- Add salary -->
+    <string name="add_salary_title">Add monthly salary</string>
+    <string name="add_salary_amount_label">Salary amount</string>
+    <string name="add_salary_recurring_label">Add automatically every month</string>
+    <string name="add_salary_confirm">Add</string>
+    <string name="add_salary_cancel">Cancel</string>
+
     <!-- Payment Screen -->
     <string name="payment_title">Payment</string>
     <string name="default_description_payment">Other</string>
+    <string name="month_title_selector">Month</string>
+
+    <!-- Upcoming payment -->
+    <string name="subscription_empty_label">No subscription yet. Tap + to add one.</string>
+    <string name="subscription_next_payment_label">Next: %1$s</string>
+    <string name="subscription_inactive_label">Disabled</string>
+
+    <!-- Subscription filters -->
+    <string name="subscription_filter_all">All</string>
+    <string name="subscription_filter_to_pay">To pay</string>
+    <string name="subscription_filter_payed">Payed</string>
+
+    <!-- Subscription actions -->
+    <string name="subscription_action_edit">Edit</string>
+    <string name="subscription_action_mark_paid">Mark as paid</string>
+    <string name="subscription_action_mark_unpaid">Mark as unpaid</string>
+    <string name="subscription_action_activate">Enable</string>
+    <string name="subscription_action_deactivate">Disable</string>
+    <string name="subscription_action_delete">Delete</string>
+
+    <!-- Add / edit subscription dialog -->
+    <string name="subscription_dialog_add_title">Add a subscription</string>
+    <string name="subscription_dialog_edit_title">Edit subscription</string>
+    <string name="subscription_name_label">Name</string>
+    <string name="subscription_amount_label">Monthly amount</string>
+    <string name="subscription_day_label">Debit day (optional)</string>
+    <string name="subscription_day_helper">Day of the month (1-31). Empty = 1st.</string>
+    <string name="subscription_confirm">Save</string>
+    <string name="subscription_cancel">Cancel</string>
+
+    <!-- Delete subscription dialog -->
+    <string name="subscription_delete_title">Delete subscription</string>
+    <string name="subscription_delete_message">Delete "%1$s"? It will no longer debit your balance.</string>
 
 
     <!-- Add transaction -->

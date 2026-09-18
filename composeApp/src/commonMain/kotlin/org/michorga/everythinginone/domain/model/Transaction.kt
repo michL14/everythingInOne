@@ -6,19 +6,22 @@ sealed class Transaction {
         val id: Long,
         val amount: Double,
         val isPaid: Boolean,
-        val description: String? = null
+        val description: String? = null,
+        val month: Long
     ) : Transaction()
 
     data class Expense(
         val id: Long,
         val amount: Double,
-        val description: String? = null
+        val description: String? = null,
+        val month: Long
     ) : Transaction()
 
     data class Refund(
         val id: Long,
         val amount: Double,
         val description: String? = null,
+        val month: Long
     ) : Transaction()
 }
 

@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.compose.material.icons.extended)
         }
         commonMain.dependencies {
+            implementation(libs.compose.ui.tooling.preview)
             implementation(libs.swipeable.kmp)
             implementation(libs.components.resources)
             implementation(libs.androidx.compose.material3)

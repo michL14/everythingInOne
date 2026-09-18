@@ -8,6 +8,9 @@ object AppState {
     var currentScreen by mutableStateOf(Screen.HOME)
     var currentSubScreen by mutableStateOf<SubScreen?>(null)
 
+    /** true si l'écran Add Payment a été ouvert depuis le "+" de la home. */
+    var addPaymentFromHome by mutableStateOf(false)
+
     /** Gère le back navigation. Retourne true si back géré, false si l'app doit quitter */
     fun handleBack(): Boolean {
         return when (currentScreen) {
@@ -16,7 +19,13 @@ object AppState {
             Screen.PAYMENT -> {
                 when (currentSubScreen) {
                     SubScreen.ADD_PAYMENT -> {
-                        currentSubScreen = SubScreen.RECENT_TRANSACTIONS
+                        if (addPaymentFromHome) {
+                            currentScreen = Screen.HOME
+                            currentSubScreen = null
+                            addPaymentFromHome = false
+                        } else {
+                            currentSubScreen = SubScreen.RECENT_TRANSACTIONS
+                        }
                         true
                     }
                     SubScreen.UPCOMING_PAYMENT,

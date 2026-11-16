@@ -5,5 +5,6 @@ data class TransactionModel(
     val amount: String = "",
     val description: String? = null,
     val isPaid: Boolean,
-    val categoryName: Long
+    val categoryName: Long,
+    val month: Long,
 )

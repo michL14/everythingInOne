@@ -8,11 +8,13 @@ import androidx.compose.ui.Modifier
 import org.michorga.everythinginone.presentation.payment.vm.PaymentViewModel
 import org.michorga.everythinginone.presentation.home.navigation.AppContent
 import org.michorga.everythinginone.presentation.home.vm.HomeViewModel
+import org.michorga.everythinginone.presentation.subscription.vm.UpcomingPaymentViewModel
 import org.michorga.everythinginone.theme.AppTheme
 
 @Composable
 fun App(
     paymentViewModel: PaymentViewModel,
+    upcomingPaymentViewModel: UpcomingPaymentViewModel,
     homeViewModel: HomeViewModel,
 ) {
     AppTheme {
@@ -22,7 +24,8 @@ fun App(
         ) {
             AppContent(
                 paymentViewModel = paymentViewModel,
-                homeViewModel = homeViewModel
+                homeViewModel = homeViewModel,
+                upcomingPaymentViewModel = upcomingPaymentViewModel,
             )
         }
     }

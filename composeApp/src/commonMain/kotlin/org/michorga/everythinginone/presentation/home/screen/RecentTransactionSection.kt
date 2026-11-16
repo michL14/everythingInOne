@@ -1,5 +1,6 @@
 package org.michorga.everythinginone.presentation.home.screen
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +21,7 @@ import org.michorga.everythinginone.theme.AppTheme.sizes
 @Composable
 fun RecentTransactionSection(
     modifier: Modifier = Modifier,
+    onSeeAllClick: () -> Unit = {}
 //    items: List<T>
 ){
     Row(
@@ -33,12 +35,14 @@ fun RecentTransactionSection(
             text = stringResource(Res.string.recent_transaction_title),
             fontWeight = FontWeight.Bold,
             fontSize = sizes.subtitleSize,
-            color = colors.title
+            color = colors.title,
+            modifier = Modifier.clickable(onClick = onSeeAllClick)
         )
         Text(
             text = stringResource(Res.string.see_all_label),
             color = colors.description,
-            fontSize = sizes.captionSize
+            fontSize = sizes.captionSize,
+            modifier = Modifier.clickable(onClick = onSeeAllClick)
         )
     }
 //    items.forEach { transaction ->

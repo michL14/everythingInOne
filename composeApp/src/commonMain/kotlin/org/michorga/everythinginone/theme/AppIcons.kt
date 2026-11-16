@@ -8,6 +8,7 @@ import compose.icons.tablericons.ArrowBack
 import compose.icons.tablericons.ArrowDownCircle
 import compose.icons.tablericons.ArrowUpCircle
 import compose.icons.tablericons.Bell
+import compose.icons.tablericons.Cash
 import compose.icons.tablericons.CircleCheck
 import compose.icons.tablericons.CirclePlus
 import compose.icons.tablericons.Home
@@ -21,6 +22,15 @@ object AppIcons {
     ) {
         Icon(
             imageVector = TablerIcons.CirclePlus, contentDescription = "Add", tint = tint
+        )
+    }
+
+    @Composable
+    fun IconButtonSalary(
+        tint: Color = LocalAppColors.current.primary
+    ) {
+        Icon(
+            imageVector = TablerIcons.Cash, contentDescription = "Add salary", tint = tint
         )
     }
 

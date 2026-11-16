@@ -21,8 +21,8 @@ fun filterChipCustomColors() = FilterChipDefaults.filterChipColors(
 fun primaryButtonCustomColors() = ButtonDefaults.buttonColors(
     containerColor = AppTheme.colors.primary,
     contentColor = AppTheme.colors.onPrimary,
-    disabledContainerColor = AppTheme.colors.disabledContainer,
-    disabledContentColor = AppTheme.colors.disabledContent
+    disabledContainerColor = AppTheme.colors.secondary.copy(alpha = 0.5f),
+    disabledContentColor = AppTheme.colors.onSecondary.copy(alpha = 0.7f)
 )
 
 @Composable
@@ -38,6 +38,6 @@ fun textFieldCustomColors() = OutlinedTextFieldDefaults.colors(
 
 @Composable
 fun colorTopAppBar() = TopAppBarDefaults.topAppBarColors(
-    containerColor = AppTheme.colors.background,
+    containerColor = AppTheme.colors.containerCard,
     titleContentColor = AppTheme.colors.title,
 )

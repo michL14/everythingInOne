@@ -38,21 +38,24 @@ class PaymentRepositoryImpl(
                     amount = transaction.amount,
                     categoryId = CategoryEnum.SUBSCRIPTION.id,
                     isPaid = if (transaction.isPaid) 1L else 0L,
-                    description = transaction.description
+                    description = transaction.description,
+                    month = transaction.month,
                 )
 
                 is Transaction.Expense -> queries.insertPayment(
                     amount = transaction.amount,
                     categoryId = CategoryEnum.EXPENSE.id,
                     isPaid = 1L,
-                    description = transaction.description
+                    description = transaction.description,
+                    month = transaction.month,
                 )
 
                 is Transaction.Refund -> queries.insertPayment(
                     amount = transaction.amount,
                     categoryId = CategoryEnum.REFUND.id,
                     isPaid = 1L,
-                    description = transaction.description
+                    description = transaction.description,
+                    month = transaction.month,
                 )
             }
         }

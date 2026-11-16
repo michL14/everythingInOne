@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.input.KeyboardType
 import everythinginone.composeapp.generated.resources.Res
 import everythinginone.composeapp.generated.resources.add_an_amount_text_field
 import org.jetbrains.compose.resources.stringResource
@@ -25,7 +27,8 @@ fun InputTextField(
     text: String?,
     onTextChange: (String) -> Unit,
     error: String? = null,
-    singleLine: Boolean = true
+    singleLine: Boolean = true,
+    keyboardType: KeyboardType = KeyboardType.Text
 ){
     Column(
         modifier = modifier,
@@ -48,6 +51,7 @@ fun InputTextField(
             modifier = modifier.fillMaxWidth(),
             colors = textFieldCustomColors(),
             shape = RoundedCornerShape(sizes.cornerRadius),
+            keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
             textStyle = TextStyle(
                 color = colors.onSurface,
                 fontSize = sizes.bodySize

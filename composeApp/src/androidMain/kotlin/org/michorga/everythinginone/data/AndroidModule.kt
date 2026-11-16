@@ -39,6 +39,10 @@ val androidModule = module {
     single { DeleteCategoryUseCase(get()) }
     single { CategoryUseCases(get(), get(), get()) }
 
-    factory { PaymentViewModel(get(), get()) }
-    factory { HomeViewModel() }
+    factory { PaymentViewModel(get(), get(), get()) }
+    factory { HomeViewModel(
+        salaryUseCases = get(),
+        subscriptionUseCases = get(),
+        transactionUseCases = get(),
+    ) }
 }

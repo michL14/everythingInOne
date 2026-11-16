@@ -25,13 +25,14 @@ import compose.icons.TablerIcons
 import compose.icons.tablericons.CirclePlus
 import everythinginone.composeapp.generated.resources.Res
 import everythinginone.composeapp.generated.resources.current_balance_label
-import everythinginone.composeapp.generated.resources.home_salutation
 import org.jetbrains.compose.resources.stringResource
 import org.michorga.everythinginone.theme.AppTheme.colors
 import org.michorga.everythinginone.theme.AppTheme.sizes
 
 @Composable
 fun CurrentBalanceSection(
+    balance: Double,
+    realEstimation: Double,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -41,7 +42,7 @@ fun CurrentBalanceSection(
             .fillMaxWidth()
             .height(130.dp)
             .background(
-                brush = Brush.linearGradient(listOf(colors.secondary, colors.primary)),
+                brush = Brush.linearGradient(listOf(colors.background, colors.primary)),
                 shape = RoundedCornerShape(sizes.cornerRadius)
             )
             .padding(sizes.paddingLarge),
@@ -56,10 +57,16 @@ fun CurrentBalanceSection(
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "$4,570.80",
+                text = formatCurrency(balance),
                 color = colors.onPrimary,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = "Real estimation: ${formatCurrency(realEstimation)}",
+                color = colors.onPrimary.copy(alpha = 0.7f),
+                fontSize = sizes.bodySize
             )
         }
         IconButton(
@@ -76,4 +83,22 @@ fun CurrentBalanceSection(
             }
         }
     }
+}
+
+/** Formate un montant en devise, ex: 4570.8 -> "$4,570.80". */
+private fun formatCurrency(value: Double): String {
+    val rounded = ((value * 100).toLong())
+    val negative = rounded < 0
+    val absCents = if (negative) -rounded else rounded
+    val cents = (absCents % 100).toString().padStart(2, '0')
+    val whole = (absCents / 100).toString()
+
+    val grouped = StringBuilder()
+    val length = whole.length
+    for (i in 0 until length) {
+        if (i > 0 && (length - i) % 3 == 0) grouped.append(',')
+        grouped.append(whole[i])
+    }
+    val sign = if (negative) "-" else ""
+    return "$sign\$$grouped.$cents"
 }

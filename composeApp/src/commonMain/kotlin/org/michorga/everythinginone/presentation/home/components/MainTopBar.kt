@@ -24,6 +24,7 @@ import org.michorga.everythinginone.theme.AppTheme.sizes
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopBar(
+    onAddSalaryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -45,6 +46,7 @@ fun MainTopBar(
             )
         }
         Row {
+            IconButton(onClick = onAddSalaryClick) { AppIcons.IconButtonSalary() }
             IconButton(onClick = {}) { AppIcons.IconHomePage() }
             IconButton(onClick = {}) { AppIcons.IconButtonNotification() }
         }

@@ -8,24 +8,18 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.unit.dp
 import everythinginone.composeapp.generated.resources.Res
 import everythinginone.composeapp.generated.resources.default_description_payment
 import org.jetbrains.compose.resources.stringResource
 import org.michorga.everythinginone.presentation.payment.model.CategoryUI
 import org.michorga.everythinginone.presentation.payment.model.TransactionUI
-import org.michorga.everythinginone.theme.AppIcons
 import org.michorga.everythinginone.theme.AppIcons.IconArrowPayment
-import org.michorga.everythinginone.theme.AppTheme
 import org.michorga.everythinginone.theme.AppTheme.colors
 import org.michorga.everythinginone.theme.AppTheme.sizes
 
@@ -37,7 +31,9 @@ fun PaymentCard(
     var container: Color
     var onContainer: Color
     var isRefund: Boolean
-    if (transaction.categoryName == CategoryUI.REFUND.value) {
+    if (transaction.categoryName == CategoryUI.REFUND.value ||
+        transaction.categoryName == CategoryUI.SALARY.value
+    ) {
         container = colors.refund
         onContainer = colors.onRefund
         isRefund = true
@@ -47,31 +43,25 @@ fun PaymentCard(
         isRefund = false
     }
 
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(sizes.cornerRadius),
-        colors = CardDefaults.cardColors(containerColor = colors.background),
-        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(sizes.paddingSmall),
     ) {
-        Row(
-            modifier = modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(sizes.paddingSmall),
-        ) {
-            PaymentIcon(
-                container = container,
-                isRefund = isRefund
-            )
-            DescriptionTransaction(
-                modifier = Modifier.weight(1f),
-                transaction = transaction
-            )
-            PriceComponent(
-                transaction = transaction,
-                onContainer = onContainer,
-            )
-        }
+        PaymentIcon(
+            container = container,
+            isRefund = isRefund
+        )
+        DescriptionTransaction(
+            modifier = Modifier.weight(1f),
+            transaction = transaction
+        )
+        PriceComponent(
+            transaction = transaction,
+            onContainer = onContainer,
+        )
     }
+
 }
 
 @Composable

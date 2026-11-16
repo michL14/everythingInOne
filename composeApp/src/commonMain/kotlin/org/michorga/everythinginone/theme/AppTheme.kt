@@ -1,11 +1,11 @@
 package org.michorga.everythinginone.theme
 
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.SelectableChipColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -37,14 +37,15 @@ data class AppColors(
     val disabledContent: Color,
     val container: Color,
     val containerCard: Color,
+    val transparent: Color = Color(0x00000000),
 )
 
 private val LightAppColors = AppColors(
     primary = Color(0xFFF88585),
     onPrimary = Color.DarkGray,
     onPrimaryLight = Color.White,
-    secondary = Color(0xF6B3B3),
-    onSecondary = Color.Gray,
+    secondary = Color(0xFFF6B3B3),
+    onSecondary = Color.DarkGray,
     background = Color.White,
     onBackground = Color.Black,
     surface = Color.White,
@@ -54,7 +55,7 @@ private val LightAppColors = AppColors(
     container = Color.LightGray,
     disabledContainer = Color.LightGray,
     disabledContent = Color.Black,
-    containerCard = Color(0xFFF3F6F4)
+    containerCard = Color(0xFFF3F6F4),
 )
 
 private val DarkAppColors = AppColors(
@@ -76,9 +77,7 @@ private val DarkAppColors = AppColors(
 )
 
 
-
 val LocalAppColors = staticCompositionLocalOf { LightAppColors }
-
 
 
 @Composable
@@ -106,7 +105,9 @@ object AppTheme {
         @Composable
         get() = LocalAppSize.current
 
-
+    val font: AppTextStyle
+        @Composable
+        get() = LocalAppTextStyle.current
 }
 
 /**
@@ -115,17 +116,46 @@ object AppTheme {
 
 data class AppSize(
     val paddingSmall: Dp = 8.dp,
+    val paddingSmall2: Dp = 12.dp,
     val paddingMedium: Dp = 16.dp,
     val paddingLarge: Dp = 24.dp,
 
     val cornerRadius: Dp = 24.dp,
+    val cornerRadiusSmall: Dp = 12.dp,
 
     val titleSize: TextUnit = 30.sp,
     val subtitleSize: TextUnit = 28.sp,
     val fieldsSize: TextUnit = 18.sp,
     val bodySize: TextUnit = 14.sp,
-    val captionSize: TextUnit = 12.sp
+    val captionSize: TextUnit = 12.sp,
+
+    val bigSize: Dp = 32.dp
+)
+
+data class AppTextStyle(
+    val bodyMedium: TextStyle,
+    val bodyLarge: TextStyle,
+    val title: TextStyle,
+    val subtitle: TextStyle,
+    val topBar: TextStyle,
 )
 
 // 2. Création du CompositionLocal
 val LocalAppSize = staticCompositionLocalOf { AppSize() }
+val LocalAppTextStyle = staticCompositionLocalOf {
+    AppTextStyle(
+        bodyMedium = TextStyle(
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black
+        ),
+        bodyLarge = TextStyle(
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black
+        ),
+        title = TextStyle(fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.Black),
+        subtitle = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Normal, color = Color.Gray),
+        topBar = TextStyle(fontSize = 22.sp, fontWeight = FontWeight.Normal, color = Color.Gray),
+    )
+}

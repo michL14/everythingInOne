@@ -11,21 +11,25 @@ fun SelectAllPayments.toDomain(): Transaction {
             amount = amount,
             isPaid = isPaidConverted,
             description = description,
+            month = month
         )
         "Refund" -> Transaction.Refund(
             id = id,
             amount = amount,
             description = description,
+            month = month
         )
         "Expense" -> Transaction.Expense(
             id = id,
             amount = amount,
-            description = description
+            description = description,
+            month = month
         )
         else -> Transaction.Expense(
             id = id,
             amount = amount,
             description = description,
+            month = month
         )
     }
 }

@@ -1,9 +1,10 @@
 package org.michorga.everythinginone.domain.repository
 
+import app.cash.sqldelight.async.coroutines.awaitAsList
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import org.michorga.everythinginone.data.local.database.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -60,7 +61,7 @@ class SubscriptionRepositoryImpl(
     override fun getAllSubscriptions(): Flow<List<Subscription>> {
         return queries.selectAllSubscriptions()
             .asFlow()
-            .mapToList(Dispatchers.IO)
+            .mapToList(ioDispatcher)
             .map { list ->
                 list.map { entity ->
                     Subscription(
@@ -78,7 +79,7 @@ class SubscriptionRepositoryImpl(
     override fun getAllSubscriptionCharges(): Flow<List<SubscriptionCharge>> {
         return queries.selectAllSubscriptionCharges()
             .asFlow()
-            .mapToList(Dispatchers.IO)
+            .mapToList(ioDispatcher)
             .map { list ->
                 list.map { entity ->
                     SubscriptionCharge(
@@ -92,7 +93,7 @@ class SubscriptionRepositoryImpl(
     }
 
     override suspend fun addSubscription(name: String, amount: Double, dayOfMonth: Int) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.insertSubscription(
                 name = name,
                 amount = amount,
@@ -104,7 +105,7 @@ class SubscriptionRepositoryImpl(
     }
 
     override suspend fun updateSubscription(id: Long, name: String, amount: Double, dayOfMonth: Int) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.updateSubscription(
                 name = name,
                 amount = amount,
@@ -115,7 +116,7 @@ class SubscriptionRepositoryImpl(
     }
 
     override suspend fun setActive(id: Long, isActive: Boolean) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.setSubscriptionActive(
                 isActive = if (isActive) 1L else 0L,
                 id = id
@@ -124,15 +125,15 @@ class SubscriptionRepositoryImpl(
     }
 
     override suspend fun deleteSubscription(id: Long) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.deleteSubscription(id)
         }
     }
 
     override suspend fun applyDueSubscriptions(currentYearMonth: String, currentDay: Int) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.transaction {
-                val subscriptions = queries.selectActiveSubscriptions().executeAsList()
+                val subscriptions = queries.selectActiveSubscriptions().awaitAsList()
                 subscriptions.forEach { sub ->
                     val alreadyAppliedThisMonth = sub.lastAppliedYearMonth == currentYearMonth
                     val debitDayReached = currentDay >= sub.dayOfMonth.toInt()
@@ -153,9 +154,9 @@ class SubscriptionRepositoryImpl(
     }
 
     override suspend fun markSubscriptionAsPaid(id: Long, currentYearMonth: String) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.transaction {
-                val sub = queries.selectSubscriptionById(id).executeAsOneOrNull()
+                val sub = queries.selectSubscriptionById(id).awaitAsOneOrNull()
                     ?: return@transaction
                 val alreadyAppliedThisMonth = sub.lastAppliedYearMonth == currentYearMonth
                 if (!alreadyAppliedThisMonth) {
@@ -174,7 +175,7 @@ class SubscriptionRepositoryImpl(
     }
 
     override suspend fun markSubscriptionAsUnpaid(id: Long, currentYearMonth: String) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.transaction {
                 queries.deleteSubscriptionChargeForMonth(
                     subscriptionId = id,

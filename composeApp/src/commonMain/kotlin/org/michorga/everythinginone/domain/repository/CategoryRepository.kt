@@ -2,8 +2,7 @@ package org.michorga.everythinginone.domain.repository
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import org.michorga.everythinginone.data.local.database.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import org.michorga.everythinginone.data.local.database.AppQueries
@@ -22,17 +21,17 @@ class CategoryRepositoryImpl(
     override fun getAllCategories(): Flow<List<Category>> {
         return db.selectAllCategories { id, name ->
             Category(id, name)
-        }.asFlow().mapToList(Dispatchers.IO)
+        }.asFlow().mapToList(ioDispatcher)
     }
 
     override suspend fun insertCategory(name: String) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             db.insertCategory(name)
         }
     }
 
     override suspend fun deleteCategory(id: Long) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             db.deleteCategory(id)
         }
     }

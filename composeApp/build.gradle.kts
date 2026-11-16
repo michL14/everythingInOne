@@ -39,6 +39,17 @@ kotlin {
 
 
     jvm("desktop")
+
+    @OptIn(org.jetbrains.kotlin.gradle.ExperimentalWasmDsl::class)
+    wasmJs {
+        outputModuleName.set("composeApp")
+        browser {
+            commonWebpackConfig {
+                outputFileName = "composeApp.js"
+            }
+        }
+        binaries.executable()
+    }
     
     sourceSets {
         val desktopMain by getting
@@ -61,6 +72,7 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.sqldelight.runtime)
             implementation(libs.sqldelight.coroutines.extensions)
+            implementation(libs.sqldelight.async.extensions)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.datetime)
             implementation(libs.composeIcons.tablerIcons)
@@ -73,6 +85,11 @@ kotlin {
         }
         iosMain.dependencies {
             implementation(libs.sqldelight.native.driver)
+        }
+        wasmJsMain.dependencies {
+            implementation(libs.sqldelight.web.worker.driver)
+            implementation(npm("sql.js", "1.8.0"))
+            implementation(devNpm("copy-webpack-plugin", "9.1.0"))
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -126,6 +143,7 @@ compose.desktop {
 sqldelight {
     databases {
         create("AppDatabase") {
+            generateAsync.set(true)
             packageName.set("org.michorga.everythinginone.data.local.database")
         }
     }

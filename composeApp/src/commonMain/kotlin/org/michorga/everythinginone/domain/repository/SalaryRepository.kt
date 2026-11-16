@@ -1,10 +1,10 @@
 package org.michorga.everythinginone.domain.repository
 
+import app.cash.sqldelight.async.coroutines.awaitAsOneOrNull
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import app.cash.sqldelight.coroutines.mapToOne
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import org.michorga.everythinginone.data.local.database.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -38,14 +38,14 @@ class SalaryRepositoryImpl(
         // Current Balance = salaires ajoutés - débits d'abonnements appliqués.
         return queries.selectCurrentBalance()
             .asFlow()
-            .mapToOne(Dispatchers.IO)
+            .mapToOne(ioDispatcher)
             .map { it ?: 0.0 }
     }
 
     override fun getAllSalaries(): Flow<List<Salary>> {
         return queries.selectAllSalaries()
             .asFlow()
-            .mapToList(Dispatchers.IO)
+            .mapToList(ioDispatcher)
             .map { list ->
                 list.map { entity ->
                     Salary(
@@ -59,7 +59,7 @@ class SalaryRepositoryImpl(
     }
 
     override suspend fun addSalary(amount: Double, yearMonth: String, isRecurring: Boolean) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.transaction {
                 queries.insertSalary(
                     amount = amount,
@@ -76,9 +76,9 @@ class SalaryRepositoryImpl(
     }
 
     override suspend fun applyRecurringSalaryIfNeeded(currentYearMonth: String) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.transaction {
-                val config = queries.selectSalaryConfig().executeAsOneOrNull() ?: return@transaction
+                val config = queries.selectSalaryConfig().awaitAsOneOrNull() ?: return@transaction
                 val recurringAmount = config.recurringAmount
                 val lastApplied = config.lastAppliedYearMonth
                 if (recurringAmount > 0.0 && lastApplied != currentYearMonth) {
@@ -94,7 +94,7 @@ class SalaryRepositoryImpl(
     }
 
     override suspend fun deleteSalary(id: Long) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.deleteSalary(id)
         }
     }

@@ -2,8 +2,7 @@ package org.michorga.everythinginone.domain.repository
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
+import org.michorga.everythinginone.data.local.database.ioDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -25,14 +24,14 @@ class PaymentRepositoryImpl(
     override fun getAllPayments(): Flow<List<Transaction>> {
         return queries.selectAllPayments()
             .asFlow()
-            .mapToList(Dispatchers.IO)
+            .mapToList(ioDispatcher)
             .map { list ->
                 list.map { it.toDomain() }
             }
     }
 
     override suspend fun addPayment(transaction: Transaction) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             when (transaction) {
                 is Transaction.Subscription -> queries.insertPayment(
                     amount = transaction.amount,
@@ -62,7 +61,7 @@ class PaymentRepositoryImpl(
     }
 
     override suspend fun deletePayment(id: Long) {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             queries.deletePayment(id)
         }
     }

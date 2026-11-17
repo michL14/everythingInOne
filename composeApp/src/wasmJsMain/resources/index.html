@@ -43,12 +43,19 @@
                     return null;
                 })(document);
                 var gl = document.createElement("canvas").getContext("webgl2");
+                var r = c && c.getBoundingClientRect();
+                var cs = c && getComputedStyle(c);
                 showError("After 8s: canvas=" + !!c +
-                    (c ? " size=" + c.width + "x" + c.height : "") +
-                    ", webgl2=" + !!gl + ", wasm=" + (typeof WebAssembly === "object") +
-                    ", UA: " + navigator.userAgent);
+                    (c ? " size=" + c.width + "x" + c.height +
+                        " rect=" + Math.round(r.left) + "," + Math.round(r.top) + "," + Math.round(r.width) + "x" + Math.round(r.height) +
+                        " vis=" + cs.visibility + " op=" + cs.opacity + " disp=" + cs.display : "") +
+                    ", webgl2=" + !!gl +
+                    (gl ? " maxTex=" + gl.getParameter(gl.MAX_TEXTURE_SIZE) + " maxRB=" + gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) : "") +
+                    ", wasm=" + (typeof WebAssembly === "object") +
+                    ", ctxLost=" + window.__ctxLost + ", UA: " + navigator.userAgent);
             }, 8000);
         });
+        window.addEventListener("webglcontextlost", function () { window.__ctxLost = true; showError("WebGL context lost"); }, true);
     </script>
     <script src="composeApp.js"></script>
 </head>

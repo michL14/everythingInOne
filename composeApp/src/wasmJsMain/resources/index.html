@@ -19,7 +19,7 @@
                 el = document.createElement("pre");
                 el.id = "startup-error";
                 el.style.cssText = "position:fixed;top:0;left:0;right:0;margin:0;padding:12px;background:#fff;color:#b00020;font:12px monospace;white-space:pre-wrap;word-break:break-all;z-index:99999";
-                document.body.appendChild(el);
+                document.documentElement.appendChild(el);
             }
             el.textContent += msg + "\n";
         }
@@ -33,7 +33,15 @@
         window.addEventListener("load", function () {
             showError("JS OK, page loaded");
             setTimeout(function () {
-                var c = document.querySelector("canvas");
+                var c = (function find(root) {
+                    var f = root.querySelector("canvas");
+                    if (f) return f;
+                    var all = root.querySelectorAll("*");
+                    for (var i = 0; i < all.length; i++) {
+                        if (all[i].shadowRoot && (f = find(all[i].shadowRoot))) return f;
+                    }
+                    return null;
+                })(document);
                 var gl = document.createElement("canvas").getContext("webgl2");
                 showError("After 8s: canvas=" + !!c +
                     (c ? " size=" + c.width + "x" + c.height : "") +

@@ -31,12 +31,15 @@
             showError("Promise: " + (r && (r.stack || r.message) || r));
         });
         window.addEventListener("load", function () {
+            showError("JS OK, page loaded");
             setTimeout(function () {
-                if (!document.querySelector("canvas")) {
-                    showError("App not started after 15s. WasmGC: " +
-                        (typeof WebAssembly === "object") + ", UA: " + navigator.userAgent);
-                }
-            }, 15000);
+                var c = document.querySelector("canvas");
+                var gl = document.createElement("canvas").getContext("webgl2");
+                showError("After 8s: canvas=" + !!c +
+                    (c ? " size=" + c.width + "x" + c.height : "") +
+                    ", webgl2=" + !!gl + ", wasm=" + (typeof WebAssembly === "object") +
+                    ", UA: " + navigator.userAgent);
+            }, 8000);
         });
     </script>
     <script src="composeApp.js"></script>

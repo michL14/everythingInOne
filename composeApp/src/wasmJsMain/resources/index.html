@@ -23,6 +23,16 @@
             }
             el.textContent += msg + "\n";
         }
+        window.__raf = 0;
+        window.__con = [];
+        (function tick() { window.__raf++; requestAnimationFrame(tick); })();
+        ["error", "warn"].forEach(function (k) {
+            var orig = console[k];
+            console[k] = function () {
+                window.__con.push(k + ": " + Array.prototype.join.call(arguments, " ").slice(0, 200));
+                orig.apply(console, arguments);
+            };
+        });
         window.addEventListener("error", function (e) {
             showError("Error: " + e.message + (e.filename ? " (" + e.filename + ":" + e.lineno + ")" : ""));
         });
@@ -53,6 +63,18 @@
                     (gl ? " maxTex=" + gl.getParameter(gl.MAX_TEXTURE_SIZE) + " maxRB=" + gl.getParameter(gl.MAX_RENDERBUFFER_SIZE) : "") +
                     ", wasm=" + (typeof WebAssembly === "object") +
                     ", ctxLost=" + window.__ctxLost + ", UA: " + navigator.userAgent);
+                showError("rAF ticks=" + window.__raf + " visibility=" + document.visibilityState);
+                if (window.__con.length) showError("console:\n" + window.__con.slice(0, 10).join("\n"));
+                if (gl) {
+                    var t = document.createElement("canvas");
+                    t.width = t.height = 4;
+                    var g2 = t.getContext("webgl2");
+                    g2.clearColor(1, 0, 0, 1);
+                    g2.clear(g2.COLOR_BUFFER_BIT);
+                    var px = new Uint8Array(4);
+                    g2.readPixels(0, 0, 1, 1, g2.RGBA, g2.UNSIGNED_BYTE, px);
+                    showError("GL clear test pixel=" + px.join(",") + " (expected 255,0,0,255) glerr=" + g2.getError());
+                }
             }, 8000);
         });
         window.addEventListener("webglcontextlost", function () { window.__ctxLost = true; showError("WebGL context lost"); }, true);

@@ -1,18 +1,9 @@
 package org.michorga.everythinginone
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.ComposeViewport
 import app.cash.sqldelight.db.SqlDriver
 import kotlinx.browser.document
-import kotlinx.browser.window
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.core.context.startKoin
@@ -38,30 +29,19 @@ fun main() {
 
 @OptIn(ExperimentalComposeUiApi::class)
 private suspend fun startApp() {
-    if (window.location.search.contains("test")) {
+    run {
+        val driver = DatabaseDriverFactory(Any()).createDriver()
+        driver.ensureSchema()
+
+        startKoin { modules(sharedModule, module { single<SqlDriver> { driver } }) }
+        val koin = KoinPlatform.getKoin()
+
         ComposeViewport(document.body!!) {
-            Box(Modifier.fillMaxSize().background(Color.Red), contentAlignment = Alignment.Center) {
-                Text("Compose OK", color = Color.White, fontSize = 32.sp)
-            }
+            App(
+                paymentViewModel = koin.get<PaymentViewModel>(),
+                homeViewModel = koin.get<HomeViewModel>(),
+                upcomingPaymentViewModel = koin.get<UpcomingPaymentViewModel>(),
+            )
         }
-    } else {
-        startFullApp()
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
-private suspend fun startFullApp() {
-    val driver = DatabaseDriverFactory(Any()).createDriver()
-    driver.ensureSchema()
-
-    startKoin { modules(sharedModule, module { single<SqlDriver> { driver } }) }
-    val koin = KoinPlatform.getKoin()
-
-    ComposeViewport(document.body!!) {
-        App(
-            paymentViewModel = koin.get<PaymentViewModel>(),
-            homeViewModel = koin.get<HomeViewModel>(),
-            upcomingPaymentViewModel = koin.get<UpcomingPaymentViewModel>(),
-        )
     }
 }

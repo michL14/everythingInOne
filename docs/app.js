@@ -5,7 +5,7 @@ const SUBSCRIPTIONS = [
   { name: "Cloud apple", amount: 9.99 },
   { name: "Téléphone", amount: 25.99 },
   { name: "Netflix", amount: 14.99 },
-  { name: "Ilévia", amount: 27.8 },
+  { name: "Ilévia", amount: 28.65 },
   { name: "Amazon Prime", amount: 6.99 },
   { name: "Revolut", amount: 200 },
   { name: "Compte commun", amount: 100 },
